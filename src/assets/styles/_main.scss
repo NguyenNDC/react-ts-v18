@@ -1,0 +1,38 @@
+.nav {
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid black;
+  padding: 20px;
+  h1 {
+    font-size: 30px;
+  }
+  ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    li {
+      padding: 0 20px;
+    }
+  }
+}
+
+
+.main {
+  height: calc(100vh - 160px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer {
+  height: 80px;
+  border-top: 1px solid black;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: green;
+  color: white;
+}
