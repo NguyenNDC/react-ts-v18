@@ -48,12 +48,12 @@ export const counterSlice = createSlice({
 
 export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
-export const selectCount = (state: RootState) => state.counter;
+export const counter = (state: RootState) => state.counter;
 
 export const incrementIfOdd =
   (amount: number): AppThunk =>
   (dispatch, getState) => {
-    const currentValue = selectCount(getState()).value;
+    const currentValue = counter(getState()).value;
     if (currentValue % 2 === 1) {
       dispatch(incrementByAmount(amount));
     }

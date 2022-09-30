@@ -1,14 +1,15 @@
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { sectionCount } from '../../store/section/reducer';
+import { increment, section } from '../../store/section/reducer';
 
 export default function Section() {
-
-  const count = useAppSelector(sectionCount);
+  const { value } = useAppSelector(section);
   const dispatch = useAppDispatch();
 
   return (
     <div>
-      <div>Section</div>
+      <h1>Section</h1>
+      <span>{value}</span>
+      <button onClick={() => dispatch(increment())}>increment</button>
     </div>
   );
 }

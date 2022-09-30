@@ -11,6 +11,9 @@
 # production
 /build
 
+#face api
+/src/faceApi
+
 # misc
 .env
 .DS_Store

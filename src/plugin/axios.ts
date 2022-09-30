@@ -1,44 +1,58 @@
+import { Store, AnyAction } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { AppInterface, getRefreshToken } from '../store/app/reducer';
 
-export interface IAxios {
-  api: string;
-}
-
-function setup(setup: IAxios) {
-  axios.create({
-    baseURL: setup.api,
-    timeout: 1000,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: 'env'
-    }
+// eslint-disable-next-line
+export const setInterceptors = (store: Store<any, AnyAction>) => {
+  const URL = process.env.REACT_APP_URL;
+  const state: AppInterface = store.getState();
+  const dispatch = store.dispatch;
+  const instance = axios.create({
+    baseURL: URL,
+    timeout: 1000
   });
 
-  // Add a request interceptor
-  axios.interceptors.request.use(
-    function (config) {
-      // Do something before request is sent
+  instance.interceptors.request.use(
+    (config) => {
+      const token = state.auth.token;
+      if (token && config.headers) {
+        config.headers['Authorization'] = 'Bearer ' + token;
+      }
       return config;
     },
-    function (error) {
-      // Do something with request error
-      return Promise.reject(error);
+    (error) => {
+      Promise.reject(error);
     }
   );
 
-  // Add a response interceptor
-  axios.interceptors.response.use(
-    function (response) {
-      // Any status code that lie within the range of 2xx cause this function to trigger
-      // Do something with response data
+  instance.interceptors.response.use(
+    (response) => {
       return response;
     },
     function (error) {
-      // Any status codes that falls outside the range of 2xx cause this function to trigger
-      // Do something with response error
+      const originalRequest = error.config;
+
+      if (error.response.status === 401 && originalRequest.url === `${URL}/auth/token`) {
+        window.location.replace(`${URL}/login`);
+        return Promise.reject(error);
+      }
+
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        const refreshToken = state.auth.refreshToken;
+        return axios
+          .post('/auth/token', {
+            refresh_token: refreshToken
+          })
+          .then((res) => {
+            if (res.status === 201) {
+              dispatch(getRefreshToken);
+              axios.defaults.headers.common['Authorization'] = 'Bearer ' + state.auth.token;
+              return axios(originalRequest);
+            }
+          });
+      }
       return Promise.reject(error);
     }
   );
-}
-
-export default setup;
+};
