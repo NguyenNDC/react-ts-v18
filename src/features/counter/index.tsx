@@ -7,13 +7,13 @@ import {
   incrementByAmount,
   incrementAsync,
   incrementIfOdd,
-  selectCount
-} from '../../store/counter/counterSlice';
+  counter
+} from '../../store/counter/reducer';
 
 import './style.scss';
 
 export default function Counter() {
-  const count = useAppSelector(selectCount);
+  const { value, status } = useAppSelector(counter);
   const dispatch = useAppDispatch();
   const [incrementAmount, setIncrementAmount] = useState('2');
 
@@ -26,7 +26,7 @@ export default function Counter() {
           -
         </button>
         <span>
-          {count.value} --- {count.status}
+          {value} --- {status}
         </span>
         <button aria-label="Increment value" onClick={() => dispatch(increment())}>
           +

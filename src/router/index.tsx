@@ -1,8 +1,10 @@
+import { lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import Loadable from '../components/load/loadable';
 
-import Counter from '../features/counter';
-import Home from '../features/home';
-import Section from '../features/section';
+const Counter = Loadable(lazy(() => import('../features/counter')));
+const Home = Loadable(lazy(() => import('../features/home')));
+const Section = Loadable(lazy(() => import('../features/section')));
 
 export default function SetupRouter() {
   return (
