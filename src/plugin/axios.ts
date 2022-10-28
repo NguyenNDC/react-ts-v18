@@ -1,5 +1,6 @@
 import { Store, AnyAction } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { history } from '../router';
 import { AppInterface, getRefreshToken } from '../store/app/reducer';
 
 // eslint-disable-next-line
@@ -33,7 +34,7 @@ export const setInterceptors = (store: Store<any, AnyAction>) => {
       const originalRequest = error.config;
 
       if (error.response.status === 401 && originalRequest.url === `${URL}/auth/token`) {
-        window.location.replace(`${URL}/login`);
+        history.push('login');
         return Promise.reject(error);
       }
 
